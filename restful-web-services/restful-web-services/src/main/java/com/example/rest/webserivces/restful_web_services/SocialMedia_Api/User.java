@@ -7,10 +7,10 @@ import jakarta.validation.constraints.Size;
 
 public class User {
     private Integer id;
-    @Size(min = 2)
+    @Size(min = 2, message = "name should have alteast 2 characters")
 
     private String name;
-    @Past()
+    @Past(message = "Birth date must be in the past")
     private LocalDate birthDate;
     public Integer getId() {
         return id;
