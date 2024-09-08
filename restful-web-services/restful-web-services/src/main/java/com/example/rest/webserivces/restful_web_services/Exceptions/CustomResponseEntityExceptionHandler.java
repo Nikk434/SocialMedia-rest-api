@@ -2,10 +2,14 @@ package com.example.rest.webserivces.restful_web_services.Exceptions;
 
 import java.time.LocalDate;
 
+import org.springframework.http.HttpHeaders;
+
 // import javax.net.ssl.HttpsURLConnection;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -29,4 +33,17 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
         return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDate.now(),
+                "Errors: " + ex.getErrorCount() + " - " + ex.getFieldError().getDefaultMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
 }
