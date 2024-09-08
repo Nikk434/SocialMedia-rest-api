@@ -2,9 +2,15 @@ package com.example.rest.webserivces.restful_web_services.SocialMedia_Api;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
+
 public class User {
     private Integer id;
+    @Size(min = 2)
+
     private String name;
+    @Past()
     private LocalDate birthDate;
     public Integer getId() {
         return id;
