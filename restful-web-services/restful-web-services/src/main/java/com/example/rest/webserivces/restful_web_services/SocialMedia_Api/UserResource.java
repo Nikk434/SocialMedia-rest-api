@@ -2,7 +2,9 @@ package com.example.rest.webserivces.restful_web_services.SocialMedia_Api;
 
 import java.net.URI;
 import java.util.List;
-
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 // import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +35,15 @@ public class UserResource {
     }
     //get user with an id
     @GetMapping("/users/{id}")
-    public User retriveUser(@PathVariable int id){
+    public EntityModel <User> retriveUser(@PathVariable int id){
         User user = userDAO_Services.findOne(id); 
+        EntityModel<User> entityModel = EntityModel.of(user);
+        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retriveAllUsers());
+        entityModel.add(link.withRel("all-users"));
         if (user == null) {
             throw new UserNotFoundException("id = "+id);
         }
-        return user;
+        return entityModel;
         
     }
     // To save a user 
