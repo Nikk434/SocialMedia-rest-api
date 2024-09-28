@@ -34,6 +34,14 @@ public class User {
     @JsonIgnore
     private List<post> posts;
 
+    public List<post> getPosts() {
+        return posts;
+    }
+    public void setPosts(List<post> posts) {
+        this.posts = posts;
+    }
+
+
     public Integer getId() {
         return id;
     }
