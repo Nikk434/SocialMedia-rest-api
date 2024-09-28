@@ -23,9 +23,6 @@ import jakarta.validation.Valid;
 public class UserJpaResource {
     
     private UserRepo userRepo;
-    
-
-    
 
     public UserJpaResource(UserRepo userRepo, UserDAO_Services userDAO_Services) {
         super();
@@ -67,5 +64,14 @@ public class UserJpaResource {
     @DeleteMapping("/jpa/users/{id}")
     public void deleteUser(@PathVariable int id){
         userRepo.deleteById(id); 
+    }
+    @GetMapping("/jpa/users/{id}/posts")
+    public List<post> retrivePostForUser(@PathVariable int id){
+        Optional<User> user = userRepo.findById(id); 
+        
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("id = "+id);
+        }
+        return user.get().getPosts();
     }
 }
