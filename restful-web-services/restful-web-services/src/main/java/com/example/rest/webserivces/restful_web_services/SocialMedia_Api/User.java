@@ -5,6 +5,13 @@ import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+// import jakarta.validation.OverridesAttribute.List;
+import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 @Entity(name = "user_details")
@@ -16,11 +23,17 @@ public class User {
     @Id
     @GeneratedValue
     private Integer id;
-    @Size(min = 2, message = "name should have alteast 2 characters")
 
+    @Size(min = 2, message = "name should have alteast 2 characters")
     private String name;
+    
     @Past(message = "Birth date must be in the past")
     private LocalDate birthDate;
+    
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<post> posts;
+
     public Integer getId() {
         return id;
     }
