@@ -24,9 +24,13 @@ public class UserJpaResource {
     
     private UserRepo userRepo;
 
-    public UserJpaResource(UserRepo userRepo, UserDAO_Services userDAO_Services) {
+    private postRepo postRepo;
+
+    public UserJpaResource(UserRepo userRepo, postRepo postRepo) {
         super();
         this.userRepo = userRepo;
+        this.postRepo = postRepo;
+        
     }
     // get all users
     @GetMapping("/jpa/users")
@@ -65,6 +69,7 @@ public class UserJpaResource {
     public void deleteUser(@PathVariable int id){
         userRepo.deleteById(id); 
     }
+    
     @GetMapping("/jpa/users/{id}/posts")
     public List<post> retrivePostForUser(@PathVariable int id){
         Optional<User> user = userRepo.findById(id); 
@@ -73,5 +78,25 @@ public class UserJpaResource {
             throw new UserNotFoundException("id = "+id);
         }
         return user.get().getPosts();
+    }
+
+    @PostMapping("/jpa/users/{id}/posts")
+    public ResponseEntity<Object> creatpostForuser(@PathVariable int id, @Valid @RequestBody post post){
+        Optional<User> user = userRepo.findById(id); 
+        
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("id = "+id);
+        }
+
+        post.setUser(user.get());
+        post saved_post = postRepo.save(post);
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand
+                        (saved_post.getId())
+                        .toUri();
+        return ResponseEntity.created(location).build();
+    
     }
 }
