@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class post {
@@ -14,7 +15,18 @@ public class post {
     @GeneratedValue
     private int id;
 
+    @Size(min = 10) 
     private String description;
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private User user;
